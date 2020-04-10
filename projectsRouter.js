@@ -65,11 +65,12 @@ router.get('/:id/actions', (req, res) => {
 
 //actions
 router.get('/:id/actions/:actionId', (req, res) => {
-    const projectId = req.params.id;
+    const actionId = req.params.actionId;
 
-    Actions.get(projectId)
+
+    Actions.get(actionId)
     .then(actions => {
-        !actions[0]
+        !actions
         ?res.status(400).json({ message: "there are no actions."})
         :res.status(200).json(actions)
     })
@@ -89,9 +90,9 @@ router.post('/:id/actions', (req, res) => {
 });
 
 router.put('/:id/actions/:actionId', (req, res) => {
-    const actionId = req.params.id;
+    const actionId = req.params.actionId;
     const updatedAction = {
-        project_id: req.params.project_id,
+        project_id: req.params.id,
         description: req.body.description,
         notes: req.body.notes
     };
@@ -111,6 +112,6 @@ router.delete('/:id/actions/:actionId', (req, res) => {
     Actions.remove(actionId)
     .then(res.status(200).json({ message: "action successfuly removed." }))
     .catch(res.status(500).json({ errorMessage: "error in removing that action." }))
-})
+});
 
 module.exports = router;
