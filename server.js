@@ -1,5 +1,5 @@
 const express = require('express');
-// const usersRouter = require('./users/usersRouter.js');
+const projectsRouter = require('./projectsRouter');
 
 const server = express();
 
@@ -8,10 +8,13 @@ server.use(logger);
 server.use(express.json());
 
 server.get('/', (req, res) => {
-    const message = process.env.MESSAGE || "hello from localhost"
-  res.status(200).json({ api: "node_api3_project", message  });
-})
+  const message = process.env.MESSAGE || "hello from localhost"
+  res.status(200).json({ api: "sprint challenge", message  });
+});
 
+server.use('/api/projects', projectsRouter);
+
+//Middleware
 function logger(req, res, next) {
     const method = req.method;
     const endpoint = req.originalUrl;
