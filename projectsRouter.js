@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const Projects = require('./data/helpers/projectModel');
+const Actions = require('./data/helpers/actionModel');
 
 router.get('/', (req, res) => {
   Projects.get()
@@ -14,8 +15,9 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
     Projects.get(req.params.id)
     .then(project => {
+        console.log(project);
         !project
-        ?res.status(400).json({ message: "could not find that project."})
+        ?res.status(400).json({ message: "could not find that project.",})
         :res.status(200).json(project)
     })
     .catch(err => res.status(500).json({ errorMessage: "error with trying to get data." }))
@@ -59,6 +61,56 @@ router.get('/:id/actions', (req, res) => {
     Projects.getProjectActions(id)
     .then(actions => res.status(200).json(actions))
     .catch(err => res.status(500).json({ message: "error in getting actions to project.", err}))
+});
+
+//actions
+router.get('/:id/actions/:actionId', (req, res) => {
+    const projectId = req.params.id;
+
+    Actions.get(projectId)
+    .then(actions => {
+        !actions[0]
+        ?res.status(400).json({ message: "there are no actions."})
+        :res.status(200).json(actions)
+    })
+    .catch(err => res.status(500).json({ errorMessage: "error getting actions.", err }))
+});
+
+router.post('/:id/actions', (req, res) => {
+    const action = {
+        project_id: req.params.id,
+        description: req.body.description,
+        notes: req.body.notes
+    };
+
+    Actions.insert(action)
+    .then(action => res.status(200).json({ message: "action successfuly posted.", action }))
+    .catch(err => res.status(500).json({ errorMessage: "error in posting action."}))
+});
+
+router.put('/:id/actions/:actionId', (req, res) => {
+    const actionId = req.params.id;
+    const updatedAction = {
+        project_id: req.params.project_id,
+        description: req.body.description,
+        notes: req.body.notes
+    };
+
+    if(updatedAction.description || updatedAction.notes){
+        Actions.update(actionId, updatedAction)
+        .then(res.status(201).json({ message: "action successfuly updated."}))
+        .catch(res.status(500).json({ errorMessage: "error in updating action."}))
+    }else {
+        res.status(400).json({ message: "please provide data to update."})
+    }
+});
+
+router.delete('/:id/actions/:actionId', (req, res) => {
+    const actionId = req.params.actionId;
+
+    Actions.remove(actionId)
+    .then(res.status(200).json({ message: "action successfuly removed." }))
+    .catch(res.status(500).json({ errorMessage: "error in removing that action." }))
 })
 
 module.exports = router;
