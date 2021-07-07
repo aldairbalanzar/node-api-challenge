@@ -40,13 +40,23 @@ Demonstrate your understanding of this Sprint's concepts by answering the follow
 
 - [ ] Mention two parts of Express that you learned about this week.
 
+We learned about Express routing to make our code more readable and about Express as an object with a lot other useful middleware.
+
 - [ ] Describe Middleware?
+
+Middleware is the middle part of the pipeline that can be used for many things before making it's whole way through a response of a request in an API.
 
 - [ ] Describe a Resource?
 
+The data held in any key of an object. 
+
 - [ ] What can the API return to help clients know if a request was successful?
 
+A response status of 200.
+
 - [ ] How can we partition our application into sub-applications?
+
+We can do so by implementing routes or “importing” them through the use of require syntax in Javascript.
 
 ## Minimum Viable Product
 
